@@ -6,12 +6,14 @@ import javax.measure.Quantity;
 import javax.measure.Unit;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 /**
  * Jackson object mappers configuration, including support for Unit of Measure.
  *
  * @see <a href="https://unitsofmeasurement.github.io/">Unit Of Measure</a> classes.
  */
+@Configuration
 public class JacksonConfiguration {
 
 	/**
