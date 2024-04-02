@@ -20,7 +20,7 @@ public class ExecutorConfiguration {
 			@Value("${marine.task.pool.max:10}") int maxSize,
 			@Value("${marine.task.capacity:25}") int capacity,
 			TaskExecutorCustomizer... customizers) {
-		log.debug("pool size core = {}, max = {}, capacity = {}", coreSize, maxSize, capacity);
+		log.info("Pool size core = {}, max = {}, capacity = {}", coreSize, maxSize, capacity);
 		return new TaskExecutorBuilder()
 				.corePoolSize(coreSize)
 				.maxPoolSize(maxSize)

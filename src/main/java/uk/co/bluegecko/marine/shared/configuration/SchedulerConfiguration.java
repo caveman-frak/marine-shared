@@ -24,7 +24,7 @@ public class SchedulerConfiguration {
 	public TaskSchedulerBuilder taskSchedulerBuilder(
 			@Value("${marine.task.pool.size:5}") int poolSize,
 			TaskSchedulerCustomizer... customizers) {
-		log.debug("pool size = {}", poolSize);
+		log.info("Pool size = {}", poolSize);
 		return new TaskSchedulerBuilder()
 				.poolSize(poolSize)
 				.threadNamePrefix("scheduler-")
