@@ -1,8 +1,7 @@
 package uk.co.bluegecko.marine.shared.mapper;
 
-import tech.uom.lib.jackson.UnitJacksonModule;
-
 import javax.measure.Quantity;
+import tech.uom.lib.jackson.UnitJacksonModule;
 
 public class MarineJacksonModule extends UnitJacksonModule {
 

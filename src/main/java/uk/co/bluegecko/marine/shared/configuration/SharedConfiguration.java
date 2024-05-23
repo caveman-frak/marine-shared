@@ -5,12 +5,12 @@ import java.util.Random;
 import java.util.random.RandomGenerator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
-import uk.co.bluegecko.marine.shared.advice.AdvicePackage;
+import uk.co.bluegecko.marine.shared.SharedPackage;
 
 /**
  * Configuration beans for general application use.
  */
-@ComponentScan(basePackageClasses = AdvicePackage.class)
+@ComponentScan(basePackageClasses = SharedPackage.class)
 public class SharedConfiguration {
 
 	/**

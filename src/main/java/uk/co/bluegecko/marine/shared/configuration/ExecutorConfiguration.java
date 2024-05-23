@@ -6,16 +6,14 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.task.ThreadPoolTaskExecutorBuilder;
 import org.springframework.boot.task.ThreadPoolTaskExecutorCustomizer;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.core.task.support.ExecutorServiceAdapter;
 
-@Configuration
 @Slf4j
 public class ExecutorConfiguration {
 
 	@Bean
-	public ThreadPoolTaskExecutorBuilder taskExecutorBuilder(
+	public ThreadPoolTaskExecutorBuilder executorBuilder(
 			@Value("${marine.task.pool.core:3}") int coreSize,
 			@Value("${marine.task.pool.max:10}") int maxSize,
 			@Value("${marine.task.capacity:25}") int capacity,
@@ -32,7 +30,7 @@ public class ExecutorConfiguration {
 	}
 
 	@Bean
-	public TaskExecutor taskExecutor(ThreadPoolTaskExecutorBuilder builder) {
+	public TaskExecutor executor(ThreadPoolTaskExecutorBuilder builder) {
 		return builder.build();
 	}
 
