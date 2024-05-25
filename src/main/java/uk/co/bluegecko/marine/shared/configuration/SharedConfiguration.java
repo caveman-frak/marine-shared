@@ -11,7 +11,7 @@ import uk.co.bluegecko.marine.shared.SharedPackage;
  * Configuration beans for general application use.
  */
 @ComponentScan(basePackageClasses = SharedPackage.class)
-public class SharedConfiguration {
+public abstract class SharedConfiguration {
 
 	/**
 	 * Standard Clock instance.

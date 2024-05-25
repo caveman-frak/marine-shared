@@ -23,7 +23,11 @@ public class TimedAdvice {
 			return joinPoint.proceed();
 		} finally {
 			long end = clock.millis();
-			log.atLevel(timed.level()).log("Timing for {} was {}ms", joinPoint.getSignature(), end - start);
+			long duration = end - start;
+			log.atLevel(timed.level()).log("Timing for {} was {}ms", joinPoint.getSignature(), duration);
+			if (timed.print()) {
+				System.out.printf("Timing for %s was %dms\n", joinPoint.getSignature(), duration);
+			}
 		}
 	}
 }

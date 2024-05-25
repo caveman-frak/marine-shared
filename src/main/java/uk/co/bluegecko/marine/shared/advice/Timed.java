@@ -12,4 +12,6 @@ public @interface Timed {
 
 	Level level() default Level.INFO;
 
+	boolean print() default false;
+
 }
