@@ -3,10 +3,9 @@ package uk.co.bluegecko.marine.shared.mapper;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.ser.std.StdScalarSerializer;
-import tech.units.indriya.format.SimpleQuantityFormat;
-
-import javax.measure.Quantity;
 import java.io.IOException;
+import javax.measure.Quantity;
+import tech.units.indriya.format.SimpleQuantityFormat;
 
 /**
  * Serialize {@link Quantity} using the {@link SimpleQuantityFormat}.

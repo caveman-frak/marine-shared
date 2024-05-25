@@ -1,17 +1,16 @@
 package uk.co.bluegecko.marine.shared.mapper;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
-import javax.measure.Quantity;
-import javax.measure.Unit;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static systems.uom.ucum.UCUM.METER;
 import static systems.uom.ucum.UCUM.TONNE;
 import static tech.units.indriya.quantity.Quantities.getQuantity;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import javax.measure.Quantity;
+import javax.measure.Unit;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 class MarineJacksonModuleTest {
 

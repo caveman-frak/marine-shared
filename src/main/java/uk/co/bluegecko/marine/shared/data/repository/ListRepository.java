@@ -1,15 +1,14 @@
 package uk.co.bluegecko.marine.shared.data.repository;
 
 
+import java.util.List;
+import java.util.Optional;
 import org.springframework.data.repository.NoRepositoryBean;
 import org.springframework.data.repository.Repository;
 
-import java.util.List;
-import java.util.Optional;
-
 /**
- * Interface for generic recall operations on a repository for a specific type.
- * This an extension to Repository returning List instead of Iterable where applicable.
+ * Interface for generic recall operations on a repository for a specific type. This an extension to Repository
+ * returning List instead of Iterable where applicable.
  *
  * @param <T>  the entity type.
  * @param <ID> the key type.
