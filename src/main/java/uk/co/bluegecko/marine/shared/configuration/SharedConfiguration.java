@@ -3,8 +3,10 @@ package uk.co.bluegecko.marine.shared.configuration;
 import java.time.Clock;
 import java.util.Random;
 import java.util.random.RandomGenerator;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.support.ResourceBundleMessageSource;
 import uk.co.bluegecko.marine.shared.SharedPackage;
 
 /**
@@ -31,6 +33,18 @@ public abstract class SharedConfiguration {
 	@Bean
 	public RandomGenerator randomGenerator() {
 		return new Random();
+	}
+
+	/**
+	 * Build a message source for the passed in bundles.
+	 *
+	 * @param bundleNames the bundles to use.
+	 * @return the message source
+	 */
+	public MessageSource messageSource(String... bundleNames) {
+		ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
+		messageSource.setBasenames(bundleNames);
+		return messageSource;
 	}
 
 }
