@@ -1,8 +1,12 @@
 package uk.co.bluegecko.marine.shared.metrics;
 
+import static java.lang.String.join;
+
+import io.micrometer.core.instrument.Clock;
 import io.micrometer.core.instrument.config.MeterFilter;
 import io.micrometer.core.instrument.logging.LoggingMeterRegistry;
 import io.micrometer.core.instrument.logging.LoggingRegistryConfig;
+import java.time.temporal.ChronoField;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.actuate.autoconfigure.metrics.MeterRegistryCustomizer;
@@ -14,7 +18,7 @@ import org.springframework.core.env.Environment;
 @Slf4j
 public class LoggingMetricsConfiguration {
 
-	private static final String LOGGING = "management.metrics.export.";
+	private static final String LOGGING = "marine.metrics.";
 
 	/**
 	 * Configuration bean for logging registry.
@@ -39,22 +43,47 @@ public class LoggingMetricsConfiguration {
 	 * @return the logging registry.
 	 */
 	@Bean
-	public LoggingMeterRegistry loggingMeterRegistry(LoggingRegistryConfig config) {
-		return LoggingMeterRegistry.builder(config).build();
+	public LoggingMeterRegistry loggingMeterRegistry(LoggingRegistryConfig config, Clock clock) {
+		return LoggingMeterRegistry.builder(config).clock(clock).build();
 	}
 
 	/**
 	 * Create customizer for {@link LoggingMeterRegistry} to only accept Geovs metrics.
 	 *
-	 * @param prefix the prefix to filter on.
+	 * @param allow the allow to filter on.
 	 * @return the customizer.
 	 */
 	@Bean
-	public MeterRegistryCustomizer<LoggingMeterRegistry> loggingMeterCustomizer(
-			@Value("${marine.metrics.logging.filter.prefix:marine}") String prefix) {
-		log.info("Logging only metrics that start with `{}`", prefix);
-		return registry -> registry.config()
-				.meterFilter(MeterFilter.denyUnless(meter -> meter.getName().startsWith(prefix)));
+	public static MeterRegistryCustomizer<LoggingMeterRegistry> loggingMeterCustomizer(
+			@Value("${marine.metrics.logging.filter.deny:}") String[] deny,
+			@Value("${marine.metrics.logging.filter.allow:marine}") String[] allow) {
+		log.info("Logging metrics that start with `{}` and excluding '{}'", join(", ", allow), join(", ", deny));
+		return registry -> {
+			for (String denied : deny) {
+				registry.config().meterFilter(MeterFilter.deny(meter -> meter.getName().startsWith(denied)));
+			}
+			for (String allowed : allow) {
+				registry.config().meterFilter(MeterFilter.denyUnless(meter -> meter.getName().startsWith(allowed)));
+			}
+		};
+	}
+
+	@Bean
+	public Clock micrometerClock(java.time.Clock clock) {
+		return new MicrometerClock(clock);
+	}
+
+	public record MicrometerClock(java.time.Clock clock) implements Clock {
+
+		@Override
+		public long wallTime() {
+			return clock.millis();
+		}
+
+		@Override
+		public long monotonicTime() {
+			return clock.instant().getLong(ChronoField.NANO_OF_DAY);
+		}
 	}
 
 }
