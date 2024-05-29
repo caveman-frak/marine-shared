@@ -6,7 +6,6 @@ import io.micrometer.core.instrument.Clock;
 import io.micrometer.core.instrument.config.MeterFilter;
 import io.micrometer.core.instrument.logging.LoggingMeterRegistry;
 import io.micrometer.core.instrument.logging.LoggingRegistryConfig;
-import java.time.temporal.ChronoField;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.actuate.autoconfigure.metrics.MeterRegistryCustomizer;
@@ -82,7 +81,7 @@ public class LoggingMetricsConfiguration {
 
 		@Override
 		public long monotonicTime() {
-			return clock.instant().getLong(ChronoField.NANO_OF_DAY);
+			return System.nanoTime();
 		}
 	}
 

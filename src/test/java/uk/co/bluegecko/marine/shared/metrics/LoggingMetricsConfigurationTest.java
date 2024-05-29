@@ -59,15 +59,11 @@ class LoggingMetricsConfigurationTest {
 	@BeforeEach
 	void setUpConfig() {
 		filters = new ArrayList<>();
+		when(registry.config()).thenReturn(config);
 		when(config.meterFilter(any())).thenAnswer(i -> {
 			filters.add(i.getArgument(0, MeterFilter.class));
 			return config;
 		});
-	}
-
-	@BeforeEach
-	void setUpRegistry() {
-		when(registry.config()).thenReturn(config);
 	}
 
 	@ParameterizedTest
