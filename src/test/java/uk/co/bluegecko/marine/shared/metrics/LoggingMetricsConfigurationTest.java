@@ -17,9 +17,9 @@ import java.time.Clock;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.BiFunction;
 import java.util.function.BinaryOperator;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.converter.ConvertWith;
@@ -37,17 +37,8 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import uk.co.bluegecko.marine.shared.metrics.LoggingMetricsConfigurationTest.Configuration;
 
 @SpringJUnitConfig
-@TestPropertySource(properties = {
-		"marine.metrics.logging.enabled=false",
-		"marine.metrics.logging.step=10s",
-		"marine.metrics.logging.logInactive=true",
-		"marine.metrics.logging.filter.deny=foo,bar"
-})
 @Import({LoggingMetricsConfiguration.class, Configuration.class})
 class LoggingMetricsConfigurationTest {
-
-	@Autowired
-	ApplicationContext context;
 
 	@MockBean
 	Config config;
@@ -77,9 +68,7 @@ class LoggingMetricsConfigurationTest {
 		customizer.customize(registry);
 		assertThat(filters).hasSize(1);
 
-		Id id = new Id(name, Tags.of("foo", "bar"), null, null, Type.COUNTER);
-		assertThat(filters.stream().map(f -> f.accept(id)).toList())
-				.hasSize(1).contains(reply);
+		assertThat(filterAndReduceReply(metric(name))).isEqualTo(reply);
 	}
 
 	@ParameterizedTest
@@ -93,9 +82,7 @@ class LoggingMetricsConfigurationTest {
 		customizer.customize(registry);
 		assertThat(filters).hasSize(1);
 
-		Id id = new Id(name, Tags.of("foo", "bar"), null, null, Type.COUNTER);
-		assertThat(filters.stream().map(f -> f.accept(id)).toList())
-				.hasSize(1).contains(reply);
+		assertThat(filterAndReduceReply(metric(name))).isEqualTo(reply);
 	}
 
 	@ParameterizedTest
@@ -109,43 +96,103 @@ class LoggingMetricsConfigurationTest {
 		customizer.customize(registry);
 		assertThat(filters).hasSize(2);
 
-		Id id = new Id(name, Tags.of("foo", "bar"), null, null, Type.COUNTER);
-		assertThat(filters.stream().map(f -> f.accept(id)).reduce(MeterFilterReply.NEUTRAL, accumulate(), combine()))
-				.isEqualTo(reply);
+		assertThat(filterAndReduceReply(metric(name))).isEqualTo(reply);
 	}
 
-	@Test
-	void registryConfigBean() {
-		LoggingRegistryConfig registryConfig = context.getBean(LoggingRegistryConfig.class);
-		assertThat(registryConfig).isNotNull();
-		assertThat(registryConfig.get("logging.enabled")).isEqualTo("false");
-		assertThat(registryConfig.get("logging.step")).isEqualTo("10s");
-		assertThat(registryConfig.get("logging.logInactive")).isEqualTo("true");
-		assertThat(registryConfig.enabled()).isEqualTo(false);
-		assertThat(registryConfig.step()).isEqualTo(Duration.ofSeconds(10));
-		assertThat(registryConfig.logInactive()).isEqualTo(true);
-	}
-
-	@Test
-	@SuppressWarnings("unchecked")
-	void registryCustomizerBean() {
-		String[] names = context.getBeanNamesForType(
-				ResolvableType.forClassWithGenerics(MeterRegistryCustomizer.class, LoggingMeterRegistry.class));
-		MeterRegistryCustomizer<LoggingMeterRegistry> customizer = (MeterRegistryCustomizer<LoggingMeterRegistry>) context.getBean(
-				names[0]);
-		assertThat(customizer).isNotNull();
+	@ParameterizedTest
+	@CsvSource({
+			"marine, deny", "marine.bar, deny", "marine.foo, deny", "foo, neutral", "bar, deny"
+	})
+	void filterDifferent(String name, @ConvertWith(ReplyFromStringConverter.class) MeterFilterReply reply) {
+		MeterRegistryCustomizer<LoggingMeterRegistry> customizer = loggingMeterCustomizer(
+				new String[]{}, new String[]{"foo"});
 
 		customizer.customize(registry);
-		assertThat(filters).hasSize(3);
+		assertThat(filters).hasSize(1);
+
+		assertThat(filterAndReduceReply(metric(name))).isEqualTo(reply);
 	}
 
-	@Test
-	void loggingMeterRegistryBean() {
-		LoggingMeterRegistry meterRegistry = context.getBean(LoggingMeterRegistry.class);
-		assertThat(meterRegistry).isNotNull();
+	@Nested
+	class BeanCreationWithDefault {
+
+		@Autowired
+		ApplicationContext context;
+
+		@Test
+		void registryConfigBean() {
+			LoggingRegistryConfig registryConfig = context.getBean(LoggingRegistryConfig.class);
+			assertThat(registryConfig).isNotNull();
+			assertThat(registryConfig.get("logging.enabled")).isEqualTo("true");
+			assertThat(registryConfig.get("logging.step")).isEqualTo("1m");
+			assertThat(registryConfig.get("logging.logInactive")).isEqualTo("false");
+			assertThat(registryConfig.enabled()).isEqualTo(true);
+			assertThat(registryConfig.step()).isEqualTo(Duration.ofSeconds(60));
+			assertThat(registryConfig.logInactive()).isEqualTo(false);
+		}
+
+		@Test
+		@SuppressWarnings("unchecked")
+		void registryCustomizerBean() {
+			String[] names = context.getBeanNamesForType(
+					ResolvableType.forClassWithGenerics(MeterRegistryCustomizer.class, LoggingMeterRegistry.class));
+			MeterRegistryCustomizer<LoggingMeterRegistry> customizer = (MeterRegistryCustomizer<LoggingMeterRegistry>) context.getBean(
+					names[0]);
+			assertThat(customizer).isNotNull();
+
+			customizer.customize(registry);
+			assertThat(filters).hasSize(1);
+		}
+
+		@Test
+		void loggingMeterRegistryBean() {
+			LoggingMeterRegistry meterRegistry = context.getBean(LoggingMeterRegistry.class);
+			assertThat(meterRegistry).isNotNull();
+		}
+
 	}
 
-	private BiFunction<MeterFilterReply, MeterFilterReply, MeterFilterReply> accumulate() {
+	@Nested
+	@TestPropertySource(properties = {
+			"marine.metrics.logging.enabled=false",
+			"marine.metrics.logging.step=10s",
+			"marine.metrics.logging.logInactive=true",
+			"marine.metrics.logging.filter.allow=marine.foo,marine.bar",
+			"marine.metrics.logging.filter.deny=foo,bar"
+	})
+	class BeanCreationWithProperties {
+
+		@Autowired
+		ApplicationContext context;
+
+		@Test
+		void registryConfigBean() {
+			LoggingRegistryConfig registryConfig = context.getBean(LoggingRegistryConfig.class);
+			assertThat(registryConfig).isNotNull();
+			assertThat(registryConfig.get("logging.enabled")).isEqualTo("false");
+			assertThat(registryConfig.get("logging.step")).isEqualTo("10s");
+			assertThat(registryConfig.get("logging.logInactive")).isEqualTo("true");
+			assertThat(registryConfig.enabled()).isEqualTo(false);
+			assertThat(registryConfig.step()).isEqualTo(Duration.ofSeconds(10));
+			assertThat(registryConfig.logInactive()).isEqualTo(true);
+		}
+
+		@Test
+		@SuppressWarnings("unchecked")
+		void registryCustomizerBean() {
+			String[] names = context.getBeanNamesForType(
+					ResolvableType.forClassWithGenerics(MeterRegistryCustomizer.class, LoggingMeterRegistry.class));
+			MeterRegistryCustomizer<LoggingMeterRegistry> customizer = (MeterRegistryCustomizer<LoggingMeterRegistry>) context.getBean(
+					names[0]);
+			assertThat(customizer).isNotNull();
+
+			customizer.customize(registry);
+			assertThat(filters).hasSize(4);
+		}
+
+	}
+
+	private BinaryOperator<MeterFilterReply> accumulator() {
 		return (previous, current) -> {
 			if (previous.equals(MeterFilterReply.DENY) || current.equals(MeterFilterReply.DENY)) {
 				return MeterFilterReply.DENY;
@@ -157,8 +204,12 @@ class LoggingMetricsConfigurationTest {
 		};
 	}
 
-	private BinaryOperator<MeterFilterReply> combine() {
-		return (previous, current) -> accumulate().apply(previous, current);
+	private static Id metric(String name) {
+		return new Id(name, Tags.of("foo", "bar"), null, null, Type.COUNTER);
+	}
+
+	private MeterFilterReply filterAndReduceReply(Id metric) {
+		return filters.stream().map(f -> f.accept(metric)).reduce(MeterFilterReply.NEUTRAL, accumulator());
 	}
 
 	@TestConfiguration
