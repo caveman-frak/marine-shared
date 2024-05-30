@@ -3,8 +3,10 @@ package uk.co.bluegecko.marine.shared.mapper;
 import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.Module;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import javax.measure.Quantity;
 import javax.measure.Unit;
+import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -24,6 +26,11 @@ public class JacksonConfiguration {
 	@Bean
 	public Module marineJacksonModule() {
 		return new MarineJacksonModule();
+	}
+
+	@Bean
+	public Jackson2ObjectMapperBuilderCustomizer customizer() {
+		return b -> b.featuresToDisable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 	}
 
 }

@@ -1,6 +1,6 @@
 package uk.co.bluegecko.marine.shared;
 
-public class SharedPackage {
+public final class SharedPackage {
 
 	private SharedPackage() {
 	}
