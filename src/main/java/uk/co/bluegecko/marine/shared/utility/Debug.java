@@ -27,10 +27,10 @@ public class Debug {
 		custom(() -> System.err, Level.ERROR, message, args);
 	}
 
-	public void custom(Supplier<OutputStream> out, Level level, String message, Object... args) {
+	public void custom(Supplier<OutputStream> output, Level level, String message, Object... args) {
 		try (PrintWriter writer = Optional.ofNullable(System.console()).map(Console::writer)
-				.orElseGet(() -> new PrintWriter(out.get()))) {
-			writer.printf(message + "\n", args);
+				.orElseGet(() -> new PrintWriter(output.get()))) {
+			writer.printf(message + '\n', args);
 		}
 		if (log.isEnabledForLevel(level)) {
 			log.atLevel(level).log(message, args);

@@ -13,6 +13,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 
+/**
+ * Set up a {@link LoggingMeterRegistry} filtered to only show a subset of available metrics.
+ */
 @Configuration
 @Slf4j
 public class LoggingMetricsConfiguration {
@@ -56,7 +59,9 @@ public class LoggingMetricsConfiguration {
 	public static MeterRegistryCustomizer<LoggingMeterRegistry> loggingMeterCustomizer(
 			@Value("${marine.metrics.logging.filter.deny:}") String[] deny,
 			@Value("${marine.metrics.logging.filter.allow:marine}") String[] allow) {
-		log.info("Logging metrics that start with `{}` and excluding '{}'", join(", ", allow), join(", ", deny));
+		log.info(deny.length == 0 ? "Logging metrics that start with `{}`" :
+						"Logging metrics that start with `{}` and excluding '{}'",
+				join(", ", allow), join(", ", deny));
 		return registry -> {
 			for (String denied : deny) {
 				registry.config().meterFilter(MeterFilter.deny(meter -> meter.getName().startsWith(denied)));
@@ -67,6 +72,12 @@ public class LoggingMetricsConfiguration {
 		};
 	}
 
+	/**
+	 * Wrap a java {@link java.time.Clock} instance as a micrometer {@link Clock}.
+	 *
+	 * @param clock the java clock instance to wrap.
+	 * @return the micrometer clock to use.
+	 */
 	@Bean
 	public Clock micrometerClock(java.time.Clock clock) {
 		return new MicrometerClock(clock);
@@ -83,6 +94,7 @@ public class LoggingMetricsConfiguration {
 		public long monotonicTime() {
 			return System.nanoTime();
 		}
+
 	}
 
 }

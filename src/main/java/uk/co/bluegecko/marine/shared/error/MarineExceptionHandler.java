@@ -1,6 +1,5 @@
 package uk.co.bluegecko.marine.shared.error;
 
-import jakarta.annotation.Nullable;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -36,7 +35,8 @@ public class MarineExceptionHandler extends ResponseEntityExceptionHandler {
 
 	@Override
 	protected ResponseEntity<Object> handleHandlerMethodValidationException(
-			HandlerMethodValidationException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+			@NonNull HandlerMethodValidationException ex, @NonNull HttpHeaders headers, @NonNull HttpStatusCode status,
+			@NonNull WebRequest request) {
 		ProblemDetail problemDetail = createProblemDetail(ex, status, getValidationMessage(ex),
 				ex.getDetailMessageCode(), ex.getDetailMessageArguments(), request);
 		return handleMethodValidationResult(ex, problemDetail, headers, status, request);
@@ -44,7 +44,8 @@ public class MarineExceptionHandler extends ResponseEntityExceptionHandler {
 
 	@Override
 	protected ResponseEntity<Object> handleMethodValidationException(
-			MethodValidationException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+			@NonNull MethodValidationException ex, @NonNull HttpHeaders headers, @NonNull HttpStatus status,
+			@NonNull WebRequest request) {
 		ProblemDetail problemDetail = createProblemDetail(ex, status, getValidationMessage(ex),
 				null, null, request);
 		return handleMethodValidationResult(ex, problemDetail, headers, status, request);
@@ -52,13 +53,14 @@ public class MarineExceptionHandler extends ResponseEntityExceptionHandler {
 
 	@Override
 	protected ResponseEntity<Object> handleMethodArgumentNotValid(
-			MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
-		ProblemDetail problemDetail = createProblemDetail(ex, status, null,
+			@NonNull MethodArgumentNotValidException ex, @NonNull HttpHeaders headers, @NonNull HttpStatusCode status,
+			@NonNull WebRequest request) {
+		ProblemDetail problemDetail = createProblemDetail(ex, status, ex.getMessage(),
 				ex.getDetailMessageCode(), ex.getDetailMessageArguments(), request);
 		return handleMethodValidationResult(ex, problemDetail, headers, status, request);
 	}
 
-	private @Nullable ResponseEntity<Object> handleMethodValidationResult(Exception ex,
+	private ResponseEntity<Object> handleMethodValidationResult(Exception ex,
 			ProblemDetail problemDetail, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
 		Map<String, Object> properties = errorAttributes.getErrorAttributes(request, getOptions());
 		if (problemDetail.getProperties() != null) {
@@ -73,7 +75,7 @@ public class MarineExceptionHandler extends ResponseEntityExceptionHandler {
 		return handleExceptionInternal(ex, problemDetail, headers, status, request);
 	}
 
-	private @NonNull String getValidationMessage(MethodValidationResult result) {
+	private String getValidationMessage(MethodValidationResult result) {
 		return Stream.concat(result.getValueResults().stream().map(this::format),
 						result.getBeanResults().stream().map(this::format))
 				.collect(Collectors.joining(", "));

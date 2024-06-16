@@ -1,14 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
 <configuration>
-  <springProfile name="default">
-    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+  <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
+  <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
+
+  <logger name="ch.qos.logback" level="WARN"/>
+
+  <appender name="JSON" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder class="net.logstash.logback.encoder.LogstashEncoder"/>
+  </appender>
+
+  <springProfile name="!production">
+    <root level="DEBUG">
+      <appender-ref ref="CONSOLE"/>
+    </root>
   </springProfile>
 
   <springProfile name="production">
-    <appender name="jsonConsoleAppender" class="ch.qos.logback.core.ConsoleAppender">
-      <encoder class="net.logstash.logback.encoder.LogstashEncoder"/>
-    </appender>
     <root level="INFO">
-      <appender-ref ref="jsonConsoleAppender"/>
+      <appender-ref ref="JSON"/>
+    </root>
+  </springProfile>
+
+  <springProfile name="develop">
+    <logger name="ch.qos.logback.core.rolling.RollingFileAppender" level="INFO"/>
+    <property name="LOG_FILE" value="${LOG_FILE:-${LOG_PATH:-${LOG_TEMP:-${java.io.tmpdir:-/tmp}}}/spring.log}"/>
+    <include resource="org/springframework/boot/logging/logback/file-appender.xml"/>
+    <root level="INFO">
+      <appender-ref ref="FILE"/>
     </root>
   </springProfile>
 </configuration>
