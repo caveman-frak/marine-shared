@@ -1,4 +1,4 @@
-package uk.co.bluegecko.marine.shared.utility.enums;
+package uk.co.bluegecko.marine.shared.utility;
 
 public interface Described {
 

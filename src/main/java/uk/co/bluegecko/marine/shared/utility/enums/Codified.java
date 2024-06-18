@@ -1,9 +1,12 @@
 package uk.co.bluegecko.marine.shared.utility.enums;
 
-public interface Codified<T extends Enum<T>> {
+import java.util.Arrays;
+import java.util.Optional;
 
-	String getCode();
+public interface Codified<T extends Enum<T>> extends uk.co.bluegecko.marine.shared.utility.Codified {
 
-	T fromCode(String code);
+	static <T extends Codified<?>> Optional<T> fromCode(T[] values, String code) {
+		return Arrays.stream(values).filter(e -> e.getCode().equals(code)).findFirst();
+	}
 
 }
