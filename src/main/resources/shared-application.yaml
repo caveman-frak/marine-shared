@@ -24,15 +24,17 @@ DB_CLOSE_ON_EXIT=FALSE;schema=public"
     password:
     driverClassName: org.h2.Driver
   jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
+    #    database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
       ddl-auto: none
+    open-in-view: true
   h2:
     console:
       enabled: true
       path: /h2
-      settings.trace: false
-      settings.web-allow-others: true
+      settings:
+        trace: false
+        web-allow-others: true
   liquibase:
     enabled: true
     changelog: config/liquibase/master.yaml
@@ -60,6 +62,11 @@ management:
     jmx:
       exposure:
         include: "*"
+  endpoint:
+    env:
+      show-values: always
+    configprops:
+      show-values: always
 
 logging:
   group:
