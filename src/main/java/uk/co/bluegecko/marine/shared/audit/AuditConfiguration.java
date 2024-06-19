@@ -7,15 +7,17 @@ import org.springframework.boot.actuate.web.exchanges.HttpExchangeRepository;
 import org.springframework.boot.actuate.web.exchanges.InMemoryHttpExchangeRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import uk.co.bluegecko.marine.shared.audit.data.AuditMapper;
 import uk.co.bluegecko.marine.shared.audit.data.AuditRepository;
 
 @Configuration
 public class AuditConfiguration {
 
 	@Bean
-	public AuditEventRepository auditEventRepository(@Autowired(required = false) AuditRepository auditRepository) {
+	public AuditEventRepository auditEventRepository(@Autowired(required = false) AuditRepository auditRepository,
+			AuditMapper auditMapper) {
 		return auditRepository != null ?
-				new JpaAuditEventRepository(auditRepository) :
+				new JpaAuditEventRepository(auditRepository, auditMapper) :
 				new InMemoryAuditEventRepository();
 	}
 

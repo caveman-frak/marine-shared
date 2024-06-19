@@ -13,7 +13,6 @@ import io.micrometer.core.instrument.config.MeterFilter;
 import io.micrometer.core.instrument.config.MeterFilterReply;
 import io.micrometer.core.instrument.logging.LoggingMeterRegistry;
 import io.micrometer.core.instrument.logging.LoggingRegistryConfig;
-import java.time.Clock;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,18 +25,17 @@ import org.junit.jupiter.params.converter.ConvertWith;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.autoconfigure.metrics.MeterRegistryCustomizer;
-import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.ResolvableType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
-import uk.co.bluegecko.marine.shared.metrics.LoggingMetricsConfigurationTest.Configuration;
+import uk.co.bluegecko.marine.shared.configuration.TestSharedConfiguration;
 
 @SpringJUnitConfig
-@Import({LoggingMetricsConfiguration.class, Configuration.class})
+@Import(LoggingMetricsConfiguration.class)
 class LoggingMetricsConfigurationTest {
 
 	@MockBean
@@ -212,13 +210,9 @@ class LoggingMetricsConfigurationTest {
 		return filters.stream().map(f -> f.accept(metric)).reduce(MeterFilterReply.NEUTRAL, accumulator());
 	}
 
-	@TestConfiguration
-	public static class Configuration {
+	@Configuration
+	static class TestConfiguration extends TestSharedConfiguration {
 
-		@Bean
-		public Clock clock() {
-			return Clock.systemUTC();
-		}
 	}
 
 }

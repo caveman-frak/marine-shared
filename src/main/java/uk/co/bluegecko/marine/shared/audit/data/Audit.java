@@ -18,6 +18,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.experimental.FieldDefaults;
@@ -33,6 +34,7 @@ public class Audit {
 
 	@Id
 	@GeneratedValue
+	@EqualsAndHashCode.Exclude
 	UUID id;
 
 	@NonNull
@@ -53,9 +55,10 @@ public class Audit {
 	Map<String, String> data;
 
 	public static Audit from(AuditEvent event) {
-		return new Audit(UUID.randomUUID(), event.getTimestamp(), event.getPrincipal(), event.getType(),
+		return Audit.builder().id(UUID.randomUUID()).created(event.getTimestamp()).principal(event.getPrincipal()).type(
+				event.getType()).data(
 				event.getData().entrySet().stream().collect(Collectors.toMap(Entry::getKey,
-						e -> e.getValue().toString())));
+						e -> e.getValue().toString()))).build();
 	}
 
 	public AuditEvent toEvent() {
