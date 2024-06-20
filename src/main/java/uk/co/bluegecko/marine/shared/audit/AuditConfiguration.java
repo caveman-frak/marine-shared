@@ -1,5 +1,6 @@
 package uk.co.bluegecko.marine.shared.audit;
 
+import java.time.Clock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.audit.AuditEventRepository;
 import org.springframework.boot.actuate.audit.InMemoryAuditEventRepository;
@@ -15,9 +16,9 @@ public class AuditConfiguration {
 
 	@Bean
 	public AuditEventRepository auditEventRepository(@Autowired(required = false) AuditRepository auditRepository,
-			AuditMapper auditMapper) {
+			AuditMapper auditMapper, Clock clock) {
 		return auditRepository != null ?
-				new JpaAuditEventRepository(auditRepository, auditMapper) :
+				new JpaAuditEventRepository(auditRepository, auditMapper, clock) :
 				new InMemoryAuditEventRepository();
 	}
 

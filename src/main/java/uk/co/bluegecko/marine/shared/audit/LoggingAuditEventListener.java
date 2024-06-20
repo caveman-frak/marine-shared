@@ -17,9 +17,9 @@ public class LoggingAuditEventListener {
 		log.info("An Audit Event was received: {}", kv("audit", event.getAuditEvent()));
 	}
 
-	@EventListener
+	@EventListener(classes = ApplicationEvent.class)
 	public void on(ApplicationEvent event) {
-		log.info("An Application Event was received: {}", kv("event", event));
+		log.debug("An Application Event was received: {}", kv("event", event));
 	}
-	
+
 }
