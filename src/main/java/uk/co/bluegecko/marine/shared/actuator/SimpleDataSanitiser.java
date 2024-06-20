@@ -17,18 +17,15 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class SimpleDataSanitiser {
 
-	private static final Stream<String> DEFAULT_KEYS = Stream.of(
-			"password", "secret", "key", "token", "private", "user.name");
-
 	/**
 	 * Property keys that should be sanitized. Merged set of default keys and additional keys.
 	 *
 	 * @param additionalKeys additional keys that should also be sanitized.
-	 * @return predicates for the keys (regex keys must be matched, others just contained).
+	 * @return predicates for the keys (regex keys must be matched, others just use contains).
 	 */
 	@Bean
 	Set<Predicate<String>> keysToSanitise(@Value("${marine.sanitise.keys:}") Set<String> additionalKeys) {
-		return Stream.concat(DEFAULT_KEYS, additionalKeys.stream())
+		return Stream.concat(defaultKeys(), additionalKeys.stream())
 				.map(SimpleDataSanitiser::toPredicate).collect(Collectors.toSet());
 	}
 
@@ -42,6 +39,10 @@ public class SimpleDataSanitiser {
 	SanitizingFunction dataSanitiser(Set<Predicate<String>> keys) {
 		return d -> keys.stream().anyMatch(p -> p.test(d.getKey())) ?
 				d.withValue(SanitizableData.SANITIZED_VALUE) : d;
+	}
+
+	private static Stream<String> defaultKeys() {
+		return Stream.of("password", "secret", "key", "token", "private", "user.name");
 	}
 
 	private static Predicate<String> toPredicate(String k) {
