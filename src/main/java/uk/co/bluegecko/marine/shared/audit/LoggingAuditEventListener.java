@@ -4,12 +4,14 @@ import static net.logstash.logback.argument.StructuredArguments.kv;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.actuate.audit.listener.AuditApplicationEvent;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
+@ConditionalOnClass(name = "ch.qos.logback.core.status.Status")
 public class LoggingAuditEventListener {
 
 	@EventListener
