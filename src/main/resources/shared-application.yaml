@@ -11,6 +11,11 @@ spring:
   output:
     ansi:
       enabled: "always"
+  shell:
+    interactive:
+      enabled: true
+    script:
+      enabled: true
   jackson:
     serialization:
       indent_output: true

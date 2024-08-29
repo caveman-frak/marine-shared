@@ -6,17 +6,12 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
-/**
- * Predicate that ignores the parameter if null otherwise does an equals check.
- *
- * @param <T> the type to check.
- */
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class NullOrEquals<S, T> implements Predicate<S> {
+public class NullOr<S, T> implements Predicate<S> {
 
-	T comparison;
 	Function<S, T> extract;
+	Predicate<T> predicate;
 
 	/**
 	 * Evaluates this predicate on the given argument against the comparison argument.
@@ -27,15 +22,15 @@ public class NullOrEquals<S, T> implements Predicate<S> {
 	@Override
 	public boolean test(S value) {
 		T v = value == null ? null : extract.apply(value);
-		return comparison == null || v == null || comparison.equals(v);
+		return v == null || predicate.test(v);
 	}
 
-	public static <S, T> NullOrEquals<S, T> nullOrEquals(T comparison, Function<S, T> extract) {
-		return new NullOrEquals<>(comparison, extract);
+	public static <S, T> NullOr<S, T> nullOr(Function<S, T> extract, Predicate<T> predicate) {
+		return new NullOr<>(extract, predicate);
 	}
 
-	public static <T> NullOrEquals<T, T> nullOrEquals(T comparison) {
-		return new NullOrEquals<>(comparison, Function.identity());
+	public static <T> NullOr<T, T> nullOr(Predicate<T> predicate) {
+		return new NullOr<>(Function.identity(), predicate);
 	}
 
 }
