@@ -33,7 +33,7 @@ otel:
 spring:
   config:
     activate:
-      on-profile: develop
+      on-profile: production
 
 otel:
   sdk:
