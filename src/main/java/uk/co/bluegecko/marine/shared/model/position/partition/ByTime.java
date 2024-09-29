@@ -1,0 +1,21 @@
+package uk.co.bluegecko.marine.shared.model.position.partition;
+
+import java.time.Instant;
+
+public interface ByTime extends ByResolution {
+
+	long epochIntervals();
+
+	default Instant start() {
+		return resolution().start(epochIntervals());
+	}
+
+	default Instant end() {
+		return resolution().end(epochIntervals());
+	}
+
+	default boolean isWithin(Instant instant) {
+		return instant.isAfter(start()) && instant.isBefore(end());
+	}
+
+}

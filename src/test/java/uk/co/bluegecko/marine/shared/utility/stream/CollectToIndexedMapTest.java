@@ -2,12 +2,12 @@ package uk.co.bluegecko.marine.shared.utility.stream;
 
 import static java.util.Map.entry;
 import static org.assertj.core.api.Assertions.assertThat;
-import static uk.co.bluegecko.marine.shared.utility.stream.CollectToIdxMap.toIdxdMap;
+import static uk.co.bluegecko.marine.shared.utility.stream.CollectToIndexedMap.toIdxdMap;
 
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 
-class CollectToIdxMapTest {
+class CollectToIndexedMapTest {
 
 	private static final String[] VALUES =
 			{"Zero", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten"};

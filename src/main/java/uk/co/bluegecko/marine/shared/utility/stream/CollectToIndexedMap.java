@@ -14,7 +14,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
-public class CollectToIdxMap<T> implements Collector<T, SortedMap<Integer, T>, SortedMap<Integer, T>> {
+public class CollectToIndexedMap<T> implements Collector<T, SortedMap<Integer, T>, SortedMap<Integer, T>> {
 
 	private final AtomicInteger index;
 
@@ -78,8 +78,8 @@ public class CollectToIdxMap<T> implements Collector<T, SortedMap<Integer, T>, S
 		return Set.of();
 	}
 
-	public static <T> CollectToIdxMap<T> toIdxdMap() {
-		return new CollectToIdxMap<>(new AtomicInteger());
+	public static <T> CollectToIndexedMap<T> toIdxdMap() {
+		return new CollectToIndexedMap<>(new AtomicInteger());
 	}
 
 }
