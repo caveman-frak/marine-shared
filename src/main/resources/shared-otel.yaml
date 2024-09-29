@@ -1,0 +1,40 @@
+otel:
+  exporter:
+    otlp:
+      protocol: http/protobuf
+      endpoint: http://grey-dragon.local:4318
+  metrics:
+    exporter: console,otlp
+  traces:
+    exporter: console,otlp
+  logs:
+    exporter: console,otlp
+  service:
+    name: geographic
+    namespace: marine
+  resource:
+    attributes:
+      deployment.environment: develop
+      service:
+        name: geographic
+        namespace: marine
+  logging: application
+  propagators:
+    - tracecontext
+  javaagent:
+    enabled: false
+    debug: false
+    logging: application
+  sdk:
+    disabled: true
+
+---
+
+spring:
+  config:
+    activate:
+      on-profile: develop
+
+otel:
+  sdk:
+    disabled: false
