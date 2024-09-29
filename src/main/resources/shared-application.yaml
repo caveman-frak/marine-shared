@@ -91,7 +91,8 @@ logging:
       com.zaxxer.hikari,
       liquibase"
     logger: "ch.qos.logback"
-    problems: "io.opentelemetry"
+    telemetry: "io.opentelemetry"
+    problems: ""
   level:
     root: "info"
     bluegecko: "debug"
@@ -99,11 +100,40 @@ logging:
     database: "info"
     logger: "warn"
     problems: "trace"
+    telemetry: "warn"
     web: "info"
 
 otel:
-  config:
-    file: "../env/otel-config.yaml"
+  exporter:
+    otlp:
+      protocol: http/protobuf
+      endpoint: http://grey-dragon.local:4318
+  metrics:
+    exporter: console,otlp
+  traces:
+    exporter: console,otlp
+  logs:
+    exporter: console,otlp
+  service:
+    name: geographic
+    namespace: marine
+  resource:
+    attributes:
+      deployment.environment: develop
+      service:
+        name: geographic
+        namespace: marine
+  logging: application
+  propagators:
+    - tracecontext
+  javaagent:
+    enabled: false
+    debug: false
+    logging: application
+
+#  experimental:
+#    config:
+#      file: "../env/otel-config.yaml"
 
 app:
   name: "${name}"
