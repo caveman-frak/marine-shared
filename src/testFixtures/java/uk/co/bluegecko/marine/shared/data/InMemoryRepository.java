@@ -531,7 +531,7 @@ public class InMemoryRepository<T, ID> implements JpaRepository<T, ID>, ListRepo
 	}
 
 	public static <T, ID> BiConsumer<T, ID> noop() {
-		return (e, i) -> {
+		return (_, _) -> {
 		};
 	}
 }

@@ -88,7 +88,6 @@ class InMemoryRepositoryTest {
 				.isEqualTo(new Foo(5L, "Five"));
 	}
 
-	@SuppressWarnings("AssertBetweenInconvertibleTypes")
 	@Test
 	void testFindById() {
 		assertThat(repository.findById(2L))
