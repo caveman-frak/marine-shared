@@ -14,6 +14,9 @@ dependencies {
     api("com.github.dtmo.jfiglet:jfiglet:1.0.1")
     implementation("net.agkn:hll:1.6.0")
     implementation("com.google.guava:guava:33.3.1-jre")
-    testFixturesImplementation("com.uber:h3:4.1.1")
+    testFixturesImplementation("org.springframework.boot:spring-boot-starter-web")
+    testFixturesImplementation("org.springframework.data:spring-data-jpa")
+    testFixturesImplementation("jakarta.persistence:jakarta.persistence-api")
     testFixturesImplementation("org.locationtech.spatial4j:spatial4j:0.8")
+    testFixturesImplementation("com.uber:h3:4.1.1")
 }
