@@ -20,7 +20,7 @@ class ThrowingConsumerTest {
 
 	@Test
 	void withNotIoException() {
-		c = (a) -> {
+		c = (_) -> {
 			// compiler error if trying to use wrong exception type, as wanted
 //			throw new ParseException(a, b);
 		};

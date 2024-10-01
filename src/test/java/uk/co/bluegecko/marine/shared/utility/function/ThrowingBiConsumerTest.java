@@ -13,14 +13,14 @@ class ThrowingBiConsumerTest {
 
 	@Test
 	void withIoException() {
-		c = (a, b) -> {
+		c = (a, _) -> {
 			throw new IOException(a);
 		};
 	}
 
 	@Test
 	void withNotIoException() {
-		c = (a, b) -> {
+		c = (_, _) -> {
 			// compiler error if trying to use wrong exception type, as wanted
 //			throw new ParseException(a, b);
 		};
