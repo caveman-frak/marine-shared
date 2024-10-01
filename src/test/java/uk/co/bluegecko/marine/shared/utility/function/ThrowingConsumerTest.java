@@ -1,26 +1,26 @@
 package uk.co.bluegecko.marine.shared.utility.function;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static uk.co.bluegecko.marine.shared.utility.function.ThrowingBiConsumer.quietConsumer;
+import static uk.co.bluegecko.marine.shared.utility.function.ThrowingConsumer.quietConsumer;
 
 import java.io.IOException;
 import java.text.ParseException;
 import org.junit.jupiter.api.Test;
 
-class ThrowingBiConsumerTest {
+class ThrowingConsumerTest {
 
-	private ThrowingBiConsumer<String, Integer, IOException> c;
+	private ThrowingConsumer<String, IOException> c;
 
 	@Test
 	void withIoException() {
-		c = (a, b) -> {
+		c = (a) -> {
 			throw new IOException(a);
 		};
 	}
 
 	@Test
 	void withNotIoException() {
-		c = (a, b) -> {
+		c = (a) -> {
 			// compiler error if trying to use wrong exception type, as wanted
 //			throw new ParseException(a, b);
 		};
@@ -28,41 +28,41 @@ class ThrowingBiConsumerTest {
 
 	@Test
 	void withRuntimeException() {
-		c = (a, b) -> {
-			throw new RuntimeException(new ParseException(a, b));
+		c = (a) -> {
+			throw new RuntimeException(new ParseException(a, 0));
 		};
 	}
 
 	@Test
 	void doQuietConsumer() {
-		c = (a, b) -> {
-			throw new IOException(a + "-" + b);
+		c = (a) -> {
+			throw new IOException(a);
 		};
-		assertThatThrownBy(() -> quietConsumer(c).accept("foo", 99))
+		assertThatThrownBy(() -> quietConsumer(c).accept("foo"))
 				.isInstanceOf(RuntimeException.class)
-				.hasMessage("foo-99")
+				.hasMessage("foo")
 				.hasCauseInstanceOf(IOException.class)
-				.hasRootCauseMessage("foo-99");
+				.hasRootCauseMessage("foo");
 	}
 
 	@Test
 	void doQuietConsumerWithoutException() {
-		c = (a, b) -> {
-			if (b % 2 == 0) {
-				throw new IOException(a + "-" + b);
+		c = (a) -> {
+			if (a.endsWith("bar")) {
+				throw new IOException(a);
 			}
 		};
-		quietConsumer(c).accept("foo", 99);
+		quietConsumer(c).accept("foo");
 	}
 
 	@Test
 	void doQuietConsumerWithRuntime() {
-		c = (a, b) -> {
-			throw new RuntimeException(a + "-" + b);
+		c = (a) -> {
+			throw new RuntimeException(a);
 		};
-		assertThatThrownBy(() -> quietConsumer(c).accept("foo", 99))
+		assertThatThrownBy(() -> quietConsumer(c).accept("foo"))
 				.isInstanceOf(RuntimeException.class)
-				.hasMessage("foo-99")
+				.hasMessage("foo")
 				.hasNoCause();
 	}
 
