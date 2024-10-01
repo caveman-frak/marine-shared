@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.platform.commons.util.ReflectionUtils;
-import uk.co.bluegecko.marine.shared.jupiter.InputOutputSource;
+import uk.co.bluegecko.marine.shared.test.jupiter.InputOutputSource;
 
 public class InputOutputArgumentsProvider extends AnnotationBasedArgumentsProvider<InputOutputSource> {
 

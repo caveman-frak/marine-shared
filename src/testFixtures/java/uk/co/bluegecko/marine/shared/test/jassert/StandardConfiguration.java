@@ -1,4 +1,4 @@
-package uk.co.bluegecko.marine.shared.jassert;
+package uk.co.bluegecko.marine.shared.test.jassert;
 
 import org.assertj.core.configuration.Configuration;
 

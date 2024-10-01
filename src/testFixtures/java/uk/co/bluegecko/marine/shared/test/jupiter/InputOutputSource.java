@@ -1,4 +1,4 @@
-package uk.co.bluegecko.marine.shared.jupiter;
+package uk.co.bluegecko.marine.shared.test.jupiter;
 
 import static org.apiguardian.api.API.Status.STABLE;
 

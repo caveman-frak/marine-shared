@@ -1,4 +1,4 @@
-package uk.co.bluegecko.marine.shared.base;
+package uk.co.bluegecko.marine.shared.test.base;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.experimental.Accessors;
 import lombok.experimental.FieldDefaults;
 import uk.co.bluegecko.marine.shared.clock.SteppingClock;
+import uk.co.bluegecko.marine.shared.configuration.DateTimeFixture;
 
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 @Getter(AccessLevel.PROTECTED)

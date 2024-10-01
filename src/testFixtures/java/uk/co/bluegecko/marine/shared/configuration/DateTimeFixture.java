@@ -1,4 +1,4 @@
-package uk.co.bluegecko.marine.shared.base;
+package uk.co.bluegecko.marine.shared.configuration;
 
 import java.time.Month;
 import java.time.ZoneOffset;

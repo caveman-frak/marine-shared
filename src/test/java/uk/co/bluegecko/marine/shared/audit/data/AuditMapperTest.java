@@ -11,7 +11,7 @@ import org.springframework.boot.actuate.audit.AuditEvent;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
-import uk.co.bluegecko.marine.shared.configuration.TestSharedConfiguration;
+import uk.co.bluegecko.marine.shared.configuration.TestApplicationConfiguration;
 
 @SpringJUnitConfig
 @Import(AuditMapperImpl.class)
@@ -55,7 +55,7 @@ class AuditMapperTest {
 	}
 
 	@Configuration
-	static class TestConfiguration extends TestSharedConfiguration {
+	static class TestConfiguration extends TestApplicationConfiguration {
 
 	}
 

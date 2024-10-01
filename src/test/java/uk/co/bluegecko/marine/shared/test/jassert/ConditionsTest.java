@@ -1,9 +1,9 @@
-package uk.co.bluegecko.marine.shared.jassert;
+package uk.co.bluegecko.marine.shared.test.jassert;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
-import static uk.co.bluegecko.marine.shared.jassert.Conditions.condition;
-import static uk.co.bluegecko.marine.shared.jassert.Conditions.isEqualTo;
+import static uk.co.bluegecko.marine.shared.test.jassert.Conditions.condition;
+import static uk.co.bluegecko.marine.shared.test.jassert.Conditions.isEqualTo;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

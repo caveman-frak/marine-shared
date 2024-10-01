@@ -1,4 +1,4 @@
-package uk.co.bluegecko.marine.shared.base;
+package uk.co.bluegecko.marine.shared.test.base;
 
 import com.fasterxml.jackson.databind.Module;
 import com.fasterxml.jackson.databind.ObjectMapper;

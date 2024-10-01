@@ -1,4 +1,4 @@
-package uk.co.bluegecko.marine.shared.base;
+package uk.co.bluegecko.marine.shared.test.base;
 
 import org.springframework.test.context.ActiveProfiles;
 

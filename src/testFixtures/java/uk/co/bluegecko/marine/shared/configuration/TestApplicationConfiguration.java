@@ -11,7 +11,6 @@ import lombok.NonNull;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
-import uk.co.bluegecko.marine.shared.base.DateTimeFixture;
 import uk.co.bluegecko.marine.shared.clock.SteppingClock;
 import uk.co.bluegecko.marine.shared.random.SteppingGenerator;
 

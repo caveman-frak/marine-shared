@@ -1,4 +1,4 @@
-package uk.co.bluegecko.marine.shared.jassert;
+package uk.co.bluegecko.marine.shared.test.jassert;
 
 import java.math.BigDecimal;
 import java.util.function.BiPredicate;

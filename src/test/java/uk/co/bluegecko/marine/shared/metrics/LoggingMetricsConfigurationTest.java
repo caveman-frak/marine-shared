@@ -32,7 +32,7 @@ import org.springframework.context.annotation.Import;
 import org.springframework.core.ResolvableType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
-import uk.co.bluegecko.marine.shared.configuration.TestSharedConfiguration;
+import uk.co.bluegecko.marine.shared.configuration.TestApplicationConfiguration;
 
 @SpringJUnitConfig
 @Import(LoggingMetricsConfiguration.class)
@@ -211,7 +211,7 @@ class LoggingMetricsConfigurationTest {
 	}
 
 	@Configuration
-	static class TestConfiguration extends TestSharedConfiguration {
+	static class TestConfiguration extends TestApplicationConfiguration {
 
 	}
 
