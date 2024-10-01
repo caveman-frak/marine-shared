@@ -20,7 +20,7 @@ class ThrowingBiPredicateTest {
 
 	@Test
 	void withNotIoException() {
-		c = (a, b) -> {
+		c = (_, _) -> {
 			// compiler error if trying to use wrong exception type, as wanted
 //			throw new ParseException(a, b);
 			return true;
