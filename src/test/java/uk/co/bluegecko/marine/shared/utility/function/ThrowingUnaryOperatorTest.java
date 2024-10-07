@@ -1,7 +1,6 @@
 package uk.co.bluegecko.marine.shared.utility.function;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static uk.co.bluegecko.marine.shared.utility.function.QuietFunctions.quietFunction;
 
 import java.io.IOException;
 import java.text.ParseException;
@@ -39,7 +38,7 @@ class ThrowingUnaryOperatorTest {
 		c = (a) -> {
 			throw new IOException(a);
 		};
-		assertThatThrownBy(() -> quietFunction(c).apply("foo"))
+		assertThatThrownBy(() -> QuietFunctions.quietOperator(c).apply("foo"))
 				.isInstanceOf(RuntimeException.class)
 				.hasMessage("foo")
 				.hasCauseInstanceOf(IOException.class)
@@ -55,7 +54,7 @@ class ThrowingUnaryOperatorTest {
 				return a;
 			}
 		};
-		quietFunction(c).apply("foo");
+		QuietFunctions.quietOperator(c).apply("foo");
 	}
 
 	@Test
@@ -63,7 +62,7 @@ class ThrowingUnaryOperatorTest {
 		c = (a) -> {
 			throw new RuntimeException(a);
 		};
-		assertThatThrownBy(() -> quietFunction(c).apply("foo"))
+		assertThatThrownBy(() -> QuietFunctions.quietOperator(c).apply("foo"))
 				.isInstanceOf(RuntimeException.class)
 				.hasMessage("foo")
 				.hasNoCause();

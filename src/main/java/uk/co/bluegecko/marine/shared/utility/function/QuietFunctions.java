@@ -99,7 +99,7 @@ public final class QuietFunctions {
 		};
 	}
 
-	public static <T, E extends Exception> UnaryOperator<T> quietFunction(ThrowingUnaryOperator<T, E> function) {
+	public static <T, E extends Exception> UnaryOperator<T> quietOperator(ThrowingUnaryOperator<T, E> function) {
 		return (t) -> {
 			try {
 				return function.apply(t);
