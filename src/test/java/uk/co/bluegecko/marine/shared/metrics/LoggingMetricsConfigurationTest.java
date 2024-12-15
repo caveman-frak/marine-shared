@@ -25,12 +25,12 @@ import org.junit.jupiter.params.converter.ConvertWith;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.autoconfigure.metrics.MeterRegistryCustomizer;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.core.ResolvableType;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import uk.co.bluegecko.marine.shared.configuration.TestApplicationConfiguration;
 
@@ -38,9 +38,9 @@ import uk.co.bluegecko.marine.shared.configuration.TestApplicationConfiguration;
 @Import(LoggingMetricsConfiguration.class)
 class LoggingMetricsConfigurationTest {
 
-	@MockBean
+	@MockitoBean
 	Config config;
-	@MockBean
+	@MockitoBean
 	LoggingMeterRegistry registry;
 
 	List<MeterFilter> filters;
