@@ -1,5 +1,6 @@
 package uk.co.bluegecko.marine.shared.test.base;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -25,7 +26,11 @@ public abstract class DatedTest extends BaseTest implements DateTimeFixture {
 		date = LocalDate.of(YEAR, MONTH, DAY);
 		time = LocalTime.of(HOUR, MINUTE, SECOND);
 		zone = ZONE;
-		clock = SteppingClock.stepping(LocalDateTime.of(date, time).toInstant(zone), zone);
+		clock = SteppingClock.stepping(instant(), zone);
+	}
+
+	protected Instant instant() {
+		return LocalDateTime.of(date, time).toInstant(zone);
 	}
 
 }

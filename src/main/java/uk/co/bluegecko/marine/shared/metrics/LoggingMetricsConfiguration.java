@@ -32,7 +32,7 @@ public class LoggingMetricsConfiguration {
 	public LoggingRegistryConfig loggingRegistryConfig(Environment environment) {
 		return key -> switch (key) {
 			case "logging.enabled" -> environment.getProperty(LOGGING + key, "true");
-			case "logging.step" -> environment.getProperty(LOGGING + key, "1m");
+			case "logging.step" -> environment.getProperty(LOGGING + key, "60m");
 			case "logging.logInactive" -> environment.getProperty(LOGGING + key, "false");
 			default -> null;
 		};

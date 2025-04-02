@@ -122,10 +122,10 @@ class LoggingMetricsConfigurationTest {
 			LoggingRegistryConfig registryConfig = context.getBean(LoggingRegistryConfig.class);
 			assertThat(registryConfig).isNotNull();
 			assertThat(registryConfig.get("logging.enabled")).isEqualTo("true");
-			assertThat(registryConfig.get("logging.step")).isEqualTo("1m");
+			assertThat(registryConfig.get("logging.step")).isEqualTo("60m");
 			assertThat(registryConfig.get("logging.logInactive")).isEqualTo("false");
 			assertThat(registryConfig.enabled()).isEqualTo(true);
-			assertThat(registryConfig.step()).isEqualTo(Duration.ofSeconds(60));
+			assertThat(registryConfig.step()).isEqualTo(Duration.ofMinutes(60));
 			assertThat(registryConfig.logInactive()).isEqualTo(false);
 		}
 

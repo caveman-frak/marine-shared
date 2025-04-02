@@ -4,7 +4,9 @@ import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.OffsetDateTime;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.random.RandomGenerator;
 import lombok.NonNull;
@@ -41,6 +43,16 @@ public class TestApplicationConfiguration extends SharedConfiguration implements
 	@Bean
 	public ZonedDateTime zonedDateTime(@NonNull LocalDateTime dateTime, @NonNull ZoneId zone) {
 		return ZonedDateTime.of(dateTime, zone);
+	}
+
+	@Bean
+	public ZoneOffset zoneOffset(LocalDateTime dateTime, ZoneId zone) {
+		return zone.getRules().getOffset(dateTime);
+	}
+
+	@Bean
+	public OffsetDateTime offsetDateTime(@NonNull LocalDateTime dateTime, @NonNull ZoneId zone) {
+		return OffsetDateTime.of(dateTime, zone.getRules().getOffset(dateTime));
 	}
 
 	@Bean

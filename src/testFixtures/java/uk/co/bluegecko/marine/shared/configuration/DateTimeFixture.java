@@ -15,9 +15,11 @@ public interface DateTimeFixture {
 	int HOUR = 12;
 	int MINUTE = 30;
 	int SECOND = 10;
+	int MILLI = 0;
+	int NANO = 0;
 
 	// expressed as seconds and milliseconds since start of epoch
-	long EPOCH_SECOND = 1592224210;
+	long EPOCH_SECOND = 961072210;
 	long EPOCH_MILLI = EPOCH_SECOND * 1000;
 
 }

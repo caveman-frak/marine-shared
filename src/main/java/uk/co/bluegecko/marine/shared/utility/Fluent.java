@@ -1,5 +1,11 @@
 package uk.co.bluegecko.marine.shared.utility;
 
+/**
+ * Adds fluent versions of the accessors for the standard interfaces:
+ * <br/>{@link uk.co.bluegecko.marine.shared.utility.Identified},
+ * <br/>{@link uk.co.bluegecko.marine.shared.utility.Codified}, <br/>{@link uk.co.bluegecko.marine.shared.utility.Named}
+ * and <br/>{@link uk.co.bluegecko.marine.shared.utility.Described}.
+ */
 public class Fluent {
 
 	public interface Identified<T extends Comparable<T>> extends uk.co.bluegecko.marine.shared.utility.Identified<T> {
