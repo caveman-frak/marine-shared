@@ -16,7 +16,6 @@ import java.util.Set;
 import java.util.stream.Stream;
 import lombok.Value;
 import org.junit.jupiter.api.Test;
-import org.springframework.core.env.Environment;
 
 class SortTest {
 
