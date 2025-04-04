@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
 import org.junit.jupiter.api.Test;
+import uk.co.bluegecko.marine.shared.utility.Contiguous;
 import uk.co.bluegecko.marine.shared.utility.Fluent;
 
 class IdentifiedTest {
@@ -34,7 +35,7 @@ class IdentifiedTest {
 	@RequiredArgsConstructor
 	@Accessors(fluent = true)
 	@Getter
-	private enum Foo implements Identified<Foo, Integer>, Fluent.Identified<Integer> {
+	private enum Foo implements Identified<Foo, Integer>, Fluent.Contiguous {
 
 		THIS(10),
 		THAT(11);
@@ -46,7 +47,7 @@ class IdentifiedTest {
 		}
 
 		public static Optional<Foo> fromOffset(int id) {
-			return Identified.fromOffset(Foo.values(), id, 10);
+			return Contiguous.fromOffset(Foo.values(), id, 10);
 		}
 
 	}

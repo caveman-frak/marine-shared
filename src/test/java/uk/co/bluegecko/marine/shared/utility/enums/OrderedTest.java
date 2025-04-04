@@ -20,6 +20,21 @@ class OrderedTest {
 		assertThat(Foo.fromId(new UUID(0, 10))).isEmpty();
 	}
 
+	@Test
+	void compareLess() {
+		assertThat(Foo.THIS.compareTo(Foo.THAT)).isEqualTo(-1);
+	}
+
+	@Test
+	void compareGreater() {
+		assertThat(Foo.THAT.compareTo(Foo.THIS)).isEqualTo(1);
+	}
+
+	@Test
+	void compareEqual() {
+		assertThat(Foo.THIS.compareTo(Foo.THIS)).isEqualTo(0);
+	}
+
 	@RequiredArgsConstructor
 	@Getter
 	private enum Foo implements Ordered<Foo, UUID> {
@@ -30,7 +45,7 @@ class OrderedTest {
 		private final UUID id;
 
 		public static Optional<Foo> fromId(UUID id) {
-			return Ordered.fromId(Foo.values(), id);
+			return Identified.fromId(Foo.values(), id);
 		}
 
 	}

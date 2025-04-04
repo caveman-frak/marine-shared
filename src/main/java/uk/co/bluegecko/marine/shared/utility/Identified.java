@@ -1,7 +1,14 @@
 package uk.co.bluegecko.marine.shared.utility;
 
-public interface Identified<T> {
+import java.util.Optional;
+import java.util.stream.Stream;
 
-	T getId();
+public interface Identified<I> {
+
+	I getId();
+
+	static <T extends Identified<I>, I> Optional<T> fromId(Stream<T> values, I id) {
+		return values.filter(e -> e.getId().equals(id)).findFirst();
+	}
 
 }

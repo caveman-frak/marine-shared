@@ -24,6 +24,10 @@ public class Fluent {
 
 	}
 
+	public interface Contiguous extends uk.co.bluegecko.marine.shared.utility.Contiguous, Identified<Integer> {
+
+	}
+
 
 	public interface Codified extends uk.co.bluegecko.marine.shared.utility.Codified {
 
