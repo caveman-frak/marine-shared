@@ -6,10 +6,10 @@ import java.util.Optional;
 public interface Identified<T extends Enum<T>, I extends Comparable<I>> extends
 		uk.co.bluegecko.marine.shared.utility.Identified<I> {
 
-	static <I extends Number & Comparable<I>, T extends Identified<?, I>> Optional<T> fromOffset(
-			T[] values, I index, int offset) {
-		int pos = index.intValue() - offset;
-		return pos >= 0 && pos < values.length ? Optional.of(values[pos]) : Optional.empty();
+	static <T extends Identified<?, Integer>> Optional<T> fromOffset(
+			T[] values, int id, int offset) {
+		int index = id - offset;
+		return index >= 0 && index < values.length ? Optional.of(values[index]) : Optional.empty();
 	}
 
 	static <I extends Comparable<I>, T extends Identified<?, I>> Optional<T> fromId(T[] values, I id) {
