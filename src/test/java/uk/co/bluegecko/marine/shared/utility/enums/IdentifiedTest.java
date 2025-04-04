@@ -3,7 +3,6 @@ package uk.co.bluegecko.marine.shared.utility.enums;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Optional;
-import java.util.UUID;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.Accessors;
@@ -13,33 +12,23 @@ import uk.co.bluegecko.marine.shared.utility.Fluent;
 class IdentifiedTest {
 
 	@Test
-	void lookupFooSuccess() {
+	void lookupSuccess() {
 		assertThat(Foo.fromId(10)).isPresent().get().isEqualTo(Foo.THIS);
 	}
 
 	@Test
-	void lookupFooFailure() {
+	void lookupFailure() {
 		assertThat(Foo.fromId(20)).isEmpty();
 	}
 
 	@Test
-	void lookupFooWithOffsetSuccess() {
+	void lookupWithOffsetSuccess() {
 		assertThat(Foo.fromOffset(10)).isPresent().get().isEqualTo(Foo.THIS);
 	}
 
 	@Test
-	void lookupFooWithOffsetFailure() {
+	void lookupWithOffsetFailure() {
 		assertThat(Foo.fromOffset(20)).isEmpty();
-	}
-
-	@Test
-	void lookupBarSuccess() {
-		assertThat(Bar.fromId(new UUID(0, 1))).isPresent().get().isEqualTo(Bar.THIS);
-	}
-
-	@Test
-	void lookupBarFailure() {
-		assertThat(Bar.fromId(new UUID(0, 10))).isEmpty();
 	}
 
 	@RequiredArgsConstructor
@@ -58,21 +47,6 @@ class IdentifiedTest {
 
 		public static Optional<Foo> fromOffset(int id) {
 			return Identified.fromOffset(Foo.values(), id, 10);
-		}
-
-	}
-
-	@RequiredArgsConstructor
-	@Getter
-	private enum Bar implements Identified<Bar, UUID> {
-
-		THIS(new UUID(0, 1)),
-		THAT(new UUID(0, 2));
-
-		private final UUID id;
-
-		public static Optional<Bar> fromId(UUID id) {
-			return Identified.fromId(Bar.values(), id);
 		}
 
 	}

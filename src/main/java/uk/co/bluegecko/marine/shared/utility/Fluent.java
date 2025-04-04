@@ -1,14 +1,14 @@
 package uk.co.bluegecko.marine.shared.utility;
 
 /**
- * Adds fluent versions of the accessors for the standard interfaces:
+ * Adds support for the standard interfaces using the fluent accessor style:
  * <br/>{@link uk.co.bluegecko.marine.shared.utility.Identified},
  * <br/>{@link uk.co.bluegecko.marine.shared.utility.Codified}, <br/>{@link uk.co.bluegecko.marine.shared.utility.Named}
  * and <br/>{@link uk.co.bluegecko.marine.shared.utility.Described}.
  */
 public class Fluent {
 
-	public interface Identified<T extends Comparable<T>> extends uk.co.bluegecko.marine.shared.utility.Identified<T> {
+	public interface Identified<T> extends uk.co.bluegecko.marine.shared.utility.Identified<T> {
 
 		T id();
 
@@ -18,6 +18,12 @@ public class Fluent {
 		}
 
 	}
+
+	public interface Ordered<T extends Ordered<T, I>, I extends Comparable<I>>
+			extends uk.co.bluegecko.marine.shared.utility.Ordered<T, I>, Identified<I> {
+
+	}
+
 
 	public interface Codified extends uk.co.bluegecko.marine.shared.utility.Codified {
 

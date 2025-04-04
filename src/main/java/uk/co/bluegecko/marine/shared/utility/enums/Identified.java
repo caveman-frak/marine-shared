@@ -3,7 +3,7 @@ package uk.co.bluegecko.marine.shared.utility.enums;
 import java.util.Arrays;
 import java.util.Optional;
 
-public interface Identified<T extends Enum<T>, I extends Comparable<I>> extends
+public interface Identified<T extends Enum<T>, I> extends
 		uk.co.bluegecko.marine.shared.utility.Identified<I> {
 
 	static <T extends Identified<?, Integer>> Optional<T> fromOffset(
@@ -12,7 +12,7 @@ public interface Identified<T extends Enum<T>, I extends Comparable<I>> extends
 		return index >= 0 && index < values.length ? Optional.of(values[index]) : Optional.empty();
 	}
 
-	static <I extends Comparable<I>, T extends Identified<?, I>> Optional<T> fromId(T[] values, I id) {
+	static <I, T extends Identified<?, I>> Optional<T> fromId(T[] values, I id) {
 		return Arrays.stream(values).filter(e -> e.getId().equals(id)).findFirst();
 	}
 

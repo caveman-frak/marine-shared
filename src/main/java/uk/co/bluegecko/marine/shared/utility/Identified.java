@@ -1,6 +1,6 @@
 package uk.co.bluegecko.marine.shared.utility;
 
-public interface Identified<T extends Comparable<T>> {
+public interface Identified<T> {
 
 	T getId();
 
