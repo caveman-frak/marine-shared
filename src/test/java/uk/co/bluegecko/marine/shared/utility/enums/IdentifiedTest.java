@@ -13,12 +13,12 @@ import uk.co.bluegecko.marine.shared.utility.Fluent;
 class IdentifiedTest {
 
 	@Test
-	void lookupSuccess() {
+	void lookupWithIdSuccess() {
 		assertThat(Foo.fromId(10)).isPresent().get().isEqualTo(Foo.THIS);
 	}
 
 	@Test
-	void lookupFailure() {
+	void lookupWithIdFailure() {
 		assertThat(Foo.fromId(20)).isEmpty();
 	}
 
@@ -30,6 +30,16 @@ class IdentifiedTest {
 	@Test
 	void lookupWithOffsetFailure() {
 		assertThat(Foo.fromOffset(20)).isEmpty();
+	}
+
+	@Test
+	void compareLess() {
+		assertThat(Foo.THIS.compareTo(Foo.THAT)).isEqualTo(-1);
+	}
+
+	@Test
+	void compareGreater() {
+		assertThat(Foo.THAT.compareTo(Foo.THIS)).isEqualTo(1);
 	}
 
 	@RequiredArgsConstructor
