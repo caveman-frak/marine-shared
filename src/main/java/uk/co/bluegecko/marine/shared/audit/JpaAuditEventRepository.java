@@ -1,5 +1,7 @@
 package uk.co.bluegecko.marine.shared.audit;
 
+import static uk.co.bluegecko.marine.shared.utility.function.NullOr.nullOrEquals;
+
 import java.time.Clock;
 import java.time.Duration;
 import java.time.Instant;
@@ -15,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 import uk.co.bluegecko.marine.shared.audit.data.Audit;
 import uk.co.bluegecko.marine.shared.audit.data.AuditMapper;
 import uk.co.bluegecko.marine.shared.audit.data.AuditRepository;
-import uk.co.bluegecko.marine.shared.utility.function.NullOrEquals;
 
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
@@ -53,8 +54,8 @@ public class JpaAuditEventRepository implements AuditEventRepository {
 	}
 
 	private Predicate<Audit> filteredBy(String principal, String type) {
-		return NullOrEquals.nullOrEquals(principal, Audit::getPrincipal)
-				.and(NullOrEquals.nullOrEquals(type, Audit::getType));
+		return nullOrEquals(Audit::getPrincipal, principal)
+				.and(nullOrEquals(Audit::getType, type));
 	}
 
 }
