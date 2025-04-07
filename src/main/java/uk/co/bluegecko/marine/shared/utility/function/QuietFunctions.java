@@ -3,6 +3,7 @@ package uk.co.bluegecko.marine.shared.utility.function;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
+import java.util.function.BinaryOperator;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -99,10 +100,23 @@ public final class QuietFunctions {
 		};
 	}
 
-	public static <T, E extends Exception> UnaryOperator<T> quietOperator(ThrowingUnaryOperator<T, E> function) {
+	public static <T, E extends Exception> UnaryOperator<T> quietOperator(ThrowingUnaryOperator<T, E> operator) {
 		return (t) -> {
 			try {
-				return function.apply(t);
+				return operator.apply(t);
+			} catch (RuntimeException e) {
+				throw e;
+			} catch (Exception e) {
+				throw new RuntimeException(e.getMessage(), e);
+			}
+		};
+	}
+
+	public static <T, E extends Exception> BinaryOperator<T> quietOperator(
+			ThrowingBinaryOperator<T, E> operator) {
+		return (t1, t2) -> {
+			try {
+				return operator.apply(t1, t2);
 			} catch (RuntimeException e) {
 				throw e;
 			} catch (Exception e) {
