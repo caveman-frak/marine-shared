@@ -18,7 +18,7 @@ public final class Fmt {
 		throw new UnsupportedOperationException();
 	}
 
-	public static final Config config = new Config();
+	private static final Config config = new Config();
 
 	public static Config config() {
 		return config;
@@ -27,6 +27,8 @@ public final class Fmt {
 	public static String fmt(Object arg) {
 		return switch (arg) {
 			case null -> config().nul();
+			case Class<?> c -> fmt(c);
+			case Enum<?> e -> fmt(e);
 			case Number n -> fmt(n);
 			case Stream<?> s -> fmt(s);
 			case Collection<?> c -> fmt(c);
@@ -45,6 +47,14 @@ public final class Fmt {
 	private static boolean leadingOrTrailingBlank(String s) {
 		int length = s.strip().length();
 		return length == 0 || length < s.length();
+	}
+
+	public static String fmt(Class<?> arg) {
+		return config().abbreviator.abbreviate(arg);
+	}
+
+	public static String fmt(Enum<?> arg) {
+		return arg.getClass().getSimpleName() + ":" + arg.name();
 	}
 
 	public static String fmt(Number arg) {
@@ -126,6 +136,7 @@ public final class Fmt {
 		private String entry = "=";
 		private String quote = "'";
 		private String nul = "NULL";
+		private Abbreviator abbreviator = Abbreviator.standard();
 
 		public Config collection(String start, String end) {
 			collection().start(start).end(end);

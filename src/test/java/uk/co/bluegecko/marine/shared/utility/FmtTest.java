@@ -9,10 +9,7 @@ import static uk.co.bluegecko.marine.shared.configuration.DateTimeFixture.MINUTE
 import static uk.co.bluegecko.marine.shared.configuration.DateTimeFixture.MONTH;
 import static uk.co.bluegecko.marine.shared.configuration.DateTimeFixture.SECOND;
 import static uk.co.bluegecko.marine.shared.configuration.DateTimeFixture.YEAR;
-import static uk.co.bluegecko.marine.shared.utility.Fmt.binary;
 import static uk.co.bluegecko.marine.shared.utility.Fmt.fmt;
-import static uk.co.bluegecko.marine.shared.utility.Fmt.hex;
-import static uk.co.bluegecko.marine.shared.utility.Fmt.octal;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -48,21 +45,22 @@ class FmtTest {
 				arguments("Leading Space", "   Foo", "'   Foo'"),
 				arguments("Trailing Space", "Foo   ", "'Foo   '"),
 				arguments("String", "Foo", "Foo"),
-				arguments("Enum", Foo.FOO, "FOO"),
+				arguments("Enum", Foo.FOO, "Foo:FOO"),
+				arguments("Class", List.class, "java.util.List"),
 				arguments("Stream<String>", Stream.of("Foo"), "<Foo>"),
 				arguments("Stream<Strings>", Stream.of("Foo", "Bar"), "<Foo,Bar>"),
-				arguments("Stream<Enum>", Stream.of(Foo.FOO), "<FOO>"),
-				arguments("Stream<Enums>", Stream.of(Foo.FOO, Foo.BAR), "<FOO,BAR>"),
+				arguments("Stream<Enum>", Stream.of(Foo.FOO), "<Foo:FOO>"),
+				arguments("Stream<Enums>", Stream.of(Foo.FOO, Foo.BAR), "<Foo:FOO,Foo:BAR>"),
 				arguments("List<String>", List.of("Foo"), "(Foo)"),
 				arguments("List<Strings>", List.of("Foo", "Bar"), "(Foo,Bar)"),
-				arguments("List<Enum>", List.of(Foo.FOO), "(FOO)"),
-				arguments("List<Enums>", List.of(Foo.FOO, Foo.BAR), "(FOO,BAR)"),
+				arguments("List<Enum>", List.of(Foo.FOO), "(Foo:FOO)"),
+				arguments("List<Enums>", List.of(Foo.FOO, Foo.BAR), "(Foo:FOO,Foo:BAR)"),
 				arguments("String[]", new String[]{"Foo"}, "[Foo]"),
 				arguments("Strings>[]", new String[]{"Foo", "Bar"}, "[Foo,Bar]"),
-				arguments("Enum[]", new Foo[]{Foo.FOO}, "[FOO]"),
-				arguments("Enums[]", new Foo[]{Foo.FOO, Foo.BAR}, "[FOO,BAR]"),
-				arguments("Map<Enum, String>", Map.of(Foo.FOO, "Foo"), "(FOO=Foo)"),
-				arguments("Map<Enum, String[]>", Map.of(Foo.FOO, new String[]{"Foo"}), "(FOO=[Foo])"),
+				arguments("Enum[]", new Foo[]{Foo.FOO}, "[Foo:FOO]"),
+				arguments("Enums[]", new Foo[]{Foo.FOO, Foo.BAR}, "[Foo:FOO,Foo:BAR]"),
+				arguments("Map<Enum, String>", Map.of(Foo.FOO, "Foo"), "(Foo:FOO=Foo)"),
+				arguments("Map<Enum, String[]>", Map.of(Foo.FOO, new String[]{"Foo"}), "(Foo:FOO=[Foo])"),
 				arguments("Int 10", 10, "10"),
 				arguments("Int 10m", 10_000_000, "10,000,000"),
 				arguments("Long 10", 10L, "10"),
@@ -84,18 +82,26 @@ class FmtTest {
 	}
 
 	@Test
-	void asHex() {
-		assertThat(hex(43)).isEqualTo("0x2B");
+	void hex() {
+		assertThat(Fmt.hex(43)).isEqualTo("0x2B");
 	}
 
 	@Test
-	void asOctal() {
-		assertThat(octal(43)).isEqualTo("053");
+	void octal() {
+		assertThat(Fmt.octal(43)).isEqualTo("053");
 	}
 
 	@Test
-	void asBinary() {
-		assertThat(binary(43)).isEqualTo("0b101011");
+	void binary() {
+		assertThat(Fmt.binary(43)).isEqualTo("0b101011");
+	}
+
+
+	@Test
+	void abbreviatedClass() {
+		Fmt.config().abbreviator(Abbreviator.truncateExcept(2));
+		assertThat(fmt(FmtTest.class))
+				.describedAs("retain 2").isEqualTo("u.c.b.m.shared.utility.FmtTest");
 	}
 
 	private enum Foo {
