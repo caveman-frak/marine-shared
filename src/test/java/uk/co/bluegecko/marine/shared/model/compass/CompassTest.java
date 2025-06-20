@@ -8,7 +8,7 @@ import static systems.uom.ucum.UCUM.RADIAN;
 import static uk.co.bluegecko.marine.shared.model.compass.Limit.BEARING;
 import static uk.co.bluegecko.marine.shared.model.compass.Limit.LATITUDE;
 import static uk.co.bluegecko.marine.shared.model.compass.Limit.LONGITUDE;
-import static uk.co.bluegecko.marine.shared.model.compass.Limit.UNLIMITED;
+import static uk.co.bluegecko.marine.shared.model.compass.Limit.UNBOUND;
 
 import javax.measure.Quantity;
 import javax.measure.quantity.Angle;
@@ -252,7 +252,7 @@ class CompassTest {
 	private static class Foo extends Compass {
 
 		protected Foo(ComparableQuantity<Angle> angle) {
-			super(angle, UNLIMITED);
+			super(angle, UNBOUND);
 		}
 
 		Foo(Number angle) {

@@ -6,25 +6,38 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Collection;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Builder.Default;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
-public final class Fmt {
+public record Fmt(Config config) {
 
-	private Fmt() {
-		throw new UnsupportedOperationException();
+	public static final Fmt fmt = fmt(Config.builder().build());
+
+	static Fmt fmt(Config config) {
+		return new Fmt(config);
 	}
 
-	private static final Config config = new Config();
-
-	public static Config config() {
-		return config;
+	public static Fmt fmt(Consumer<Config.ConfigBuilder> customiser) {
+		Config.ConfigBuilder builder = fmt.config.toBuilder();
+		customiser.accept(builder);
+		return new Fmt(builder.build());
 	}
 
-	public static String fmt(Object arg) {
+	public static String format(Object arg) {
+		return fmt.fmt(arg);
+	}
+
+	public static String format(String key, Object arg) {
+		return fmt.fmt(key, arg);
+	}
+
+	public String fmt(Object arg) {
 		return switch (arg) {
 			case null -> config().nul();
 			case Class<?> c -> fmt(c);
@@ -44,20 +57,29 @@ public final class Fmt {
 		};
 	}
 
-	private static boolean leadingOrTrailingBlank(String s) {
+	public String fmt(String key, Object arg) {
+		return String.format(config.keyValue(), key, fmt(arg));
+	}
+
+	private boolean leadingOrTrailingBlank(String s) {
 		int length = s.strip().length();
 		return length == 0 || length < s.length();
 	}
 
-	public static String fmt(Class<?> arg) {
+	private String fmt(Class<?> arg) {
 		return config().abbreviator.abbreviate(arg);
 	}
 
-	public static String fmt(Enum<?> arg) {
-		return arg.getClass().getSimpleName() + ":" + arg.name();
+	private String fmt(Enum<?> arg) {
+		StringBuilder buffer = new StringBuilder();
+		if (config().showEnumClass()) {
+			buffer.append(arg.getClass().getSimpleName()).append(":");
+		}
+		buffer.append(arg.name());
+		return buffer.toString();
 	}
 
-	public static String fmt(Number arg) {
+	private String fmt(Number arg) {
 		return switch (arg) {
 			case Byte b -> fmt(b.longValue());
 			case Short s -> fmt(s.longValue());
@@ -71,71 +93,86 @@ public final class Fmt {
 		};
 	}
 
-	public static String fmt(long arg) {
+	private String fmt(long arg) {
 		return config().longFormat().format(arg);
 	}
 
-	public static String fmt(double arg) {
+	private String fmt(double arg) {
 		return config().doubleFormat().format(arg);
 	}
 
-	public static String fmt(Stream<?> arg) {
+	private String fmt(Stream<?> arg) {
 		return fmt(arg, config().stream());
 	}
 
-	public static String fmt(Collection<?> arg) {
+	private String fmt(Collection<?> arg) {
 		return fmt(arg.stream(), config().collection());
 	}
 
-	public static String fmt(Map<?, ?> arg) {
+	public String fmt(Map<?, ?> arg) {
 		return fmt(arg.entrySet().stream(), config().collection());
 	}
 
-	public static String fmt(Map.Entry<?, ?> arg) {
+	private String fmt(Map.Entry<?, ?> arg) {
 		return fmt(arg.getKey(), arg.getValue());
 	}
 
-	public static String fmt(Object key, Object value) {
+	private String fmt(Object key, Object value) {
 		return config().kv(fmt(key), fmt(value));
 	}
 
-	public static <T> String fmt(T[] arg) {
+	public <T> String fmt(T[] arg) {
 		return fmt(Stream.of(arg), config().array());
 	}
 
-	private static String fmt(Stream<?> arg, Braces braces) {
+	private String fmt(Stream<?> arg, Braces braces) {
 		return fmt(arg, braces.start(), braces.end());
 	}
 
-	public static String fmt(Stream<?> arg, String start, String end) {
-		return arg.map(Fmt::fmt).collect(Collectors.joining(config().separator(), start, end));
+	private String fmt(Stream<?> arg, String start, String end) {
+		return arg.map(this::fmt).collect(Collectors.joining(config().separator(), start, end));
 	}
 
-	public static String hex(int n) {
+	public String hex(int n) {
 		return "0x" + Integer.toHexString(n).toUpperCase();
 	}
 
-	public static String octal(int n) {
+	public String octal(int n) {
 		return "0" + Integer.toOctalString(n);
 	}
 
-	public static String binary(int n) {
+	public String binary(int n) {
 		return "0b" + Integer.toBinaryString(n);
 	}
 
 	@Data
-	@Accessors(fluent = true)
+	@Accessors(fluent = true, chain = true)
+	@Builder(toBuilder = true)
 	public static class Config {
 
+		@Default
 		private final NumberFormat longFormat = new DecimalFormat("#,##0");
+		@Default
 		private final NumberFormat doubleFormat = new DecimalFormat("#,##0.0#####");
+		@Default
 		private final Braces collection = new Braces("(", ")");
+		@Default
 		private final Braces array = new Braces("[", "]");
+		@Default
 		private final Braces stream = new Braces("<", ">");
+		@Default
 		private String separator = ",";
+		@Default
 		private String entry = "=";
+		@Default
 		private String quote = "'";
+		@Default
+		private String keyValue = "%s=%s";
+		@Default
 		private String nul = "NULL";
+		@Default
+		private boolean showEnumClass = true;
+		@Default
 		private Abbreviator abbreviator = Abbreviator.standard();
 
 		public Config collection(String start, String end) {

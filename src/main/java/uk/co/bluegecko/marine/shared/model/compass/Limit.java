@@ -4,6 +4,7 @@ import static systems.uom.ucum.UCUM.DEGREE;
 
 import java.util.EnumSet;
 import java.util.Set;
+import javax.measure.Quantity;
 import javax.measure.quantity.Angle;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -18,18 +19,25 @@ import tech.units.indriya.quantity.QuantityRange;
 @Accessors(fluent = true)
 @Getter
 public enum Limit {
-	BEARING(QuantityRange.of(
-			Quantities.getQuantity(0, DEGREE), Quantities.getQuantity(360, DEGREE)),
-			EnumSet.noneOf(Hemisphere.class)),
-	LATITUDE(QuantityRange.of(
-			Quantities.getQuantity(-90, DEGREE), Quantities.getQuantity(90, DEGREE)),
-			EnumSet.of(Hemisphere.NORTH, Hemisphere.SOUTH)),
-	LONGITUDE(QuantityRange.of(
-			Quantities.getQuantity(-180, DEGREE), Quantities.getQuantity(180, DEGREE)),
-			EnumSet.of(Hemisphere.EAST, Hemisphere.WEST)),
-	UNLIMITED(QuantityRange.of(null, null), EnumSet.noneOf(Hemisphere.class));
+	BEARING(range(0, 360), EnumSet.noneOf(Hemisphere.class)),
+	LATITUDE(range(-90, 90), EnumSet.of(Hemisphere.NORTH, Hemisphere.SOUTH)),
+	LONGITUDE(range(-180, 180), EnumSet.of(Hemisphere.EAST, Hemisphere.WEST)),
+	UNBOUND(unbound(), EnumSet.noneOf(Hemisphere.class));
 
 	QuantityRange<Angle> range;
 	Set<Hemisphere> hemispheres;
+
+	@SuppressWarnings("unchecked")
+	private static QuantityRange<Angle> range(Quantity<Angle> minimum, Quantity<Angle> maxiumum) {
+		return QuantityRange.of(minimum, maxiumum);
+	}
+
+	private static QuantityRange<Angle> range(double minimum, double maxiumum) {
+		return range(Quantities.getQuantity(minimum, DEGREE), Quantities.getQuantity(maxiumum, DEGREE));
+	}
+
+	private static QuantityRange<Angle> unbound() {
+		return range(null, null);
+	}
 
 }

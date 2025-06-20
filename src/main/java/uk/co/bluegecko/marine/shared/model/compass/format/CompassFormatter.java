@@ -39,7 +39,7 @@ public class CompassFormatter implements Formatter<Compass> {
 							text, pos.getIndex(), pos.getErrorIndex()),
 					pos.getErrorIndex());
 		} else if (decimal != null) {
-			return new Bearing(Quantities.getQuantity(decimal, DEGREE));
+			return new Bearing(Quantities.getQuantity(degrees + decimal, DEGREE));
 		} else if (text.length() > pos.getIndex()) {
 			String abbrev = text.substring(pos.getIndex());
 			return Hemisphere.fromAbbreviation(abbrev).map(h -> {

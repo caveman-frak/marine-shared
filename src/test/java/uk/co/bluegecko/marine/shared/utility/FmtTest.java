@@ -10,6 +10,7 @@ import static uk.co.bluegecko.marine.shared.configuration.DateTimeFixture.MONTH;
 import static uk.co.bluegecko.marine.shared.configuration.DateTimeFixture.SECOND;
 import static uk.co.bluegecko.marine.shared.configuration.DateTimeFixture.YEAR;
 import static uk.co.bluegecko.marine.shared.utility.Fmt.fmt;
+import static uk.co.bluegecko.marine.shared.utility.Fmt.format;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -36,7 +37,7 @@ class FmtTest {
 	@ParameterizedTest
 	@MethodSource("valueProvider")
 	void checkFormat(String description, Object value, String result) {
-		assertThat(fmt(value)).describedAs(description).isEqualTo(result);
+		assertThat(Fmt.format(value)).describedAs(description).isEqualTo(result);
 	}
 
 	static Stream<Arguments> valueProvider() {
@@ -83,25 +84,36 @@ class FmtTest {
 
 	@Test
 	void hex() {
-		assertThat(Fmt.hex(43)).isEqualTo("0x2B");
+		assertThat(fmt.hex(43)).isEqualTo("0x2B");
 	}
 
 	@Test
 	void octal() {
-		assertThat(Fmt.octal(43)).isEqualTo("053");
+		assertThat(fmt.octal(43)).isEqualTo("053");
 	}
 
 	@Test
 	void binary() {
-		assertThat(Fmt.binary(43)).isEqualTo("0b101011");
+		assertThat(fmt.binary(43)).isEqualTo("0b101011");
 	}
 
 
 	@Test
 	void abbreviatedClass() {
-		Fmt.config().abbreviator(Abbreviator.truncateExcept(2));
-		assertThat(fmt(FmtTest.class))
+		Fmt f = Fmt.fmt(b -> b.abbreviator(Abbreviator.truncateExcept(2)));
+		assertThat(f.fmt(FmtTest.class))
 				.describedAs("retain 2").isEqualTo("u.c.b.m.shared.utility.FmtTest");
+	}
+
+	@Test
+	void keyValue() {
+		assertThat(format("key", "value")).isEqualTo("key=value");
+	}
+
+	@Test
+	void keyValueAlt() {
+		Fmt f = Fmt.fmt(b -> b.keyValue("%2$s::%1$s"));
+		assertThat(f.fmt("key", "value")).isEqualTo("value::key");
 	}
 
 	private enum Foo {
