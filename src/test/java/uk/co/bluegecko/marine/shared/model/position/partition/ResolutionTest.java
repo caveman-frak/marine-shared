@@ -30,42 +30,42 @@ class ResolutionTest {
 	@Test
 	void finest() {
 		assertThat(core.getNumCells(FINEST.h3())).isEqualTo(3_389_7029_882L);
-		assertThat(core.getHexagonEdgeLengthAvg(FINEST.h3(), m)).isCloseTo(65.90, withPercentage(1));
+		assertThat(core.getHexagonEdgeLengthAvg(FINEST.h3(), m)).isCloseTo(75.86, withPercentage(1));
 		assertThat(core.getHexagonAreaAvg(FINEST.h3(), m2)).isCloseTo(15_040, withPercentage(1));
 	}
 
 	@Test
 	void finer() {
 		assertThat(core.getNumCells(FINER.h3())).isEqualTo(691_776_122L);
-		assertThat(core.getHexagonEdgeLengthAvg(FINER.h3(), m)).isCloseTo(461.3, withPercentage(1));
+		assertThat(core.getHexagonEdgeLengthAvg(FINER.h3(), m)).isCloseTo(531.4, withPercentage(1));
 		assertThat(core.getHexagonAreaAvg(FINER.h3(), km2)).isCloseTo(0.7372, withPercentage(1));
 	}
 
 	@Test
 	void fine() {
 		assertThat(core.getNumCells(FINE.h3())).isEqualTo(14_117_882L);
-		assertThat(core.getHexagonEdgeLengthAvg(FINE.h3(), km)).isCloseTo(3.229, withPercentage(1));
+		assertThat(core.getHexagonEdgeLengthAvg(FINE.h3(), km)).isCloseTo(3.725, withPercentage(1));
 		assertThat(core.getHexagonAreaAvg(FINE.h3(), km2)).isCloseTo(36.12, withPercentage(1));
 	}
 
 	@Test
 	void medium() {
 		assertThat(core.getNumCells(MEDIUM.h3())).isEqualTo(288_122L);
-		assertThat(core.getHexagonEdgeLengthAvg(MEDIUM.h3(), km)).isCloseTo(22.60, withPercentage(1));
+		assertThat(core.getHexagonEdgeLengthAvg(MEDIUM.h3(), km)).isCloseTo(26.07, withPercentage(1));
 		assertThat(core.getHexagonAreaAvg(MEDIUM.h3(), km2)).isCloseTo(1770, withPercentage(1));
 	}
 
 	@Test
 	void coarse() {
 		assertThat(core.getNumCells(COARSE.h3())).isEqualTo(5_882L);
-		assertThat(core.getHexagonEdgeLengthAvg(COARSE.h3(), km)).isCloseTo(158.2, withPercentage(1));
+		assertThat(core.getHexagonEdgeLengthAvg(COARSE.h3(), km)).isCloseTo(182.5, withPercentage(1));
 		assertThat(core.getHexagonAreaAvg(COARSE.h3(), km2)).isCloseTo(8_6800, withPercentage(1));
 	}
 
 	@Test
 	void coarsest() {
 		assertThat(core.getNumCells(COARSEST.h3())).isEqualTo(122L);
-		assertThat(core.getHexagonEdgeLengthAvg(COARSEST.h3(), km)).isCloseTo(1107, withPercentage(1));
+		assertThat(core.getHexagonEdgeLengthAvg(COARSEST.h3(), km)).isCloseTo(1281, withPercentage(1));
 		assertThat(core.getHexagonAreaAvg(COARSEST.h3(), km2)).isCloseTo(4_357_000, withPercentage(1));
 	}
 

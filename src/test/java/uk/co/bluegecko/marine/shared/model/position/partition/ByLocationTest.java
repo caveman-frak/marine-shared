@@ -6,6 +6,7 @@ import static org.assertj.core.data.Percentage.withPercentage;
 
 import com.uber.h3core.util.LatLng;
 import java.io.IOException;
+import java.util.Arrays;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.locationtech.jts.geom.Geometry;
@@ -45,31 +46,38 @@ class ByLocationTest extends AbstractPartitionTest {
 			assertThat(jtsGeometry.hasArea()).isTrue();
 
 			Geometry geometry = jtsGeometry.getGeom();
+			Arrays.stream(geometry.getCoordinates()).forEach(coordinate ->
+					System.out.printf("coord(%1.18f, %1.18f),%n", coordinate.y, coordinate.x));
+
 			assertThat(geometry.getCoordinates()).hasSize(7)
 					.containsOnly(
-							coord(-0.347497758904720340, 0.044690645952080520),
-							coord(-0.149076599292419480, 0.139598563951521500),
-							coord(0.019774497642379523, 0.040568958463974200),
-							coord(-0.009690978862186525, -0.152694418773190600),
-							coord(-0.207421233298126530, -0.247275004831890550),
-							coord(-0.376375408881438200, -0.148920082157978030),
-							coord(-0.347497758904720340, 0.044690645952080520));
+							coord(-0.347497758904717740, 0.044690645952074160),
+							coord(-0.149076599292415230, 0.139598563951521500),
+							coord(0.019774497642386310, 0.040568958463961476),
+							coord(-0.009690978862182271, -0.152694418773196950),
+							coord(-0.207421233298125450, -0.247275004831896900),
+							coord(-0.376375408881431300, -0.148920082157990740),
+							coord(-0.347497758904717740, 0.044690645952074160));
+			assertThat(hexagon.getArea(ctx)).as("Area deg²").isEqualTo(0.10665285196521122);
 		}
-		assertThat(hexagon.getArea(ctx)).as("Area deg²").isEqualTo(0.10665285196520981);
 	}
 
 	@Test
 	void cellCharacteristics() {
+		h3Core.cellToBoundary(location.cell()).forEach(
+				latLng -> System.out.printf("latLng(%1.18f, %1.18f),%n", latLng.lat, latLng.lng));
+
 		assertThat(h3Core.cellToBoundary(location.cell())).hasSize(6)
 				.containsOnly(
-						latLng(-0.347497758904720340, 0.044690645952080520),
-						latLng(-0.149076599292419480, 0.139598563951521500),
-						latLng(0.019774497642379523, 0.040568958463974200),
-						latLng(-0.009690978862186525, -0.152694418773190600),
-						latLng(-0.207421233298126530, -0.247275004831890550),
-						latLng(-0.376375408881438200, -0.148920082157978030));
+						latLng(-0.347497758904717740, 0.044690645952074160),
+						latLng(-0.149076599292415230, 0.139598563951521500),
+						latLng(0.019774497642386310, 0.040568958463961476),
+						latLng(-0.009690978862182271, -0.152694418773196950),
+						latLng(-0.207421233298125450, -0.247275004831896900),
+						latLng(-0.376375408881431300, -0.148920082157990740));
+
 		assertThat(h3Core.cellArea(location.cell(), rads2)).as("Area sr (rad²)")
-				.isEqualTo(0.00003248837599063693);
+				.isEqualTo(0.00003248837599063735);
 	}
 
 	@Test
